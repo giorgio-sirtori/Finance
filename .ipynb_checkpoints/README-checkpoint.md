@@ -13,6 +13,7 @@
 This project's aim is to create a collection of finance related code for personal use and as a training for myself, nothing contained in this work represent's any form of financial advice. What I would like to accomplish with this project is to familiarise myself with Python and a different set of libraries, for now the project can be divided in three main parts (everything is still a WIP):
 
 ### 📊  [Finance Functions](#finance-functions)
+### 📈  [Basic Stock Chart and Analysis](#basic-stock-chart-and-analysis)
 ### 💯  [Finding an Efficient Portfolio](#finding-an-efficient-portfolio)
 ### 🌟  [Portfolio Summary](#portfolio-summary)
 ### 🔮  [Online Dashboard Hosted on Heroku](#online-dashboard-hosted-on-heroku)
@@ -22,7 +23,9 @@ This project's aim is to create a collection of finance related code for persona
 
 
 ## Finance Functions
-- [Finance Functions](https://github.com/giorgio-sirtori/Finance/blob/main/finance.ipynb)This is a set of function used trought the repository, the main tools used are pandas and yfinance to obtain stock prices. The main purpose is to create a personal set of function to use torugh the projects.
+- [Finance Functions](https://github.com/giorgio-sirtori/Finance/blob/main/finance.ipynb): This is a set of function used through the repository and with the purpose of creating a sort of personal library, the main tools used are pandas and yfinance to obtain stock prices.
+## basic-stock-chart-and-analysis
+- [Basic Stock Charts and Analysis](https://github.com/giorgio-sirtori/Finance/blob/main/basic_stock_charts.ipynb): Some simple charts and a monte carlo simulation of a stock price.
 ## Finding an Efficient Portfolio
 ## Portfolio Summary
 ## Online Dashboard Hosted on Heroku
