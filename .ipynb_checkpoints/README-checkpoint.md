@@ -15,7 +15,6 @@ This project's aim is to create a collection of finance related code for persona
 ### 📊  [Finance Functions](#finance-functions)
 ### 📈  [Basic Stock Chart and Analysis](#basic-stock-chart-and-analysis)
 ### 💯  [Finding an Efficient Portfolio](#finding-an-efficient-portfolio)
-### 🌟  [Portfolio Summary](#portfolio-summary)
 ### 🔮  [Online Dashboard Hosted on Heroku](#online-dashboard-hosted-on-heroku)
 
 
@@ -27,5 +26,4 @@ This project's aim is to create a collection of finance related code for persona
 ## basic-stock-chart-and-analysis
 - [Basic Stock Charts and Analysis](https://github.com/giorgio-sirtori/Finance/blob/main/basic_stock_charts.ipynb): Some simple charts and a monte carlo simulation of a stock price.
 ## Finding an Efficient Portfolio
-## Portfolio Summary
 ## Online Dashboard Hosted on Heroku
