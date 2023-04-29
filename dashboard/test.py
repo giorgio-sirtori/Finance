@@ -12,10 +12,12 @@ import plotly.express as px
 
 # Set the colors for the app
 colors = {
-    'background': '#111111',
+    'background': '#ffffff',
     'text': '#7FDBFF',
     'accent': '#0074D9'
 }
+
+
 
 # Create the app layout with a dark theme
 app = dash.Dash(__name__, 
@@ -30,7 +32,7 @@ app.layout = html.Div([
     
     html.Div([
         
-        html.H1('Stock Ticker Dashboard',
+        html.H1('Stock Dashboard',
                 style={
                     'textAlign': 'center',
                     'color': colors['accent'],
@@ -112,6 +114,47 @@ def print_selected_values(n_clicks, value, start, end):
     
     elif len(value) > 0 and start is not None and end is not None and n_clicks > 0:
         
+        
+        stock_data = yf.download(value, start=start, end=end, group_by='ticker')
+
+        # Calculate daily returns
+        daily_returns = stock_data.xs('Adj Close', level = 1, axis = 1).pct_change()
+        
+        # Calculate annual returns and covariances
+        annual_returns = daily_returns.mean() * 252
+        cov_matrix = daily_returns.cov() * 252
+        
+        # Define objective function
+        def objective(weights, returns, cov_matrix):
+            portfolio_return = np.dot(weights, returns)
+            portfolio_variance = np.dot(weights.T, np.dot(cov_matrix, weights))
+            portfolio_std_dev = np.sqrt(portfolio_variance)
+            return portfolio_return, portfolio_std_dev
+        
+        # Define function to simulate random portfolios
+        def simulate_random_portfolios(returns, cov_matrix, num_portfolios):
+            num_assets = len(returns)
+            all_weights = np.zeros((num_portfolios, num_assets))
+            rets = np.zeros(num_portfolios)
+            stds = np.zeros(num_portfolios)
+            for i in range(num_portfolios):
+                weights = np.random.random(num_assets)
+                weights /= np.sum(weights)
+                all_weights[i,:] = weights
+                rets[i], stds[i] = objective(weights, returns, cov_matrix)
+            return all_weights, rets, stds
+        
+        # Perform Monte Carlo simulation
+        num_portfolios = 10000
+        all_weights, rets, stds = simulate_random_portfolios(annual_returns, cov_matrix, num_portfolios)
+        
+        # Find portfolio with highest Sharpe ratio
+        sharpe_ratios = rets / stds
+        max_sharpe_ratio_index = np.argmax(sharpe_ratios)
+        optimal_weights = all_weights[max_sharpe_ratio_index,:]
+
+        
+        
         for each in value:
             df = getTickerData(each, start, end)
             fig = px.histogram(df, x = df['Daily Return'])
@@ -119,7 +162,7 @@ def print_selected_values(n_clicks, value, start, end):
             
         return html.Div([
             html.H3('Selected values:'),
-            html.Ul([html.Li(val) for val in value])
+            html.Ul([html.Li(val) for val in optimal_weights])
         ]), charts 
     
     else:
