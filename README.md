@@ -26,4 +26,5 @@ This project's aim is to create a collection of finance related code for persona
 ## basic-stock-chart-and-analysis
 - [Basic Stock Charts and Analysis](https://github.com/giorgio-sirtori/Finance/blob/main/basic_stock_charts.ipynb): Some simple charts and a monte carlo simulation of a stock price.
 ## Finding an Efficient Portfolio
+- [Finding an Efficient Portfolio](https://github.com/giorgio-sirtori/Finance/blob/main/portfolio_efficient_frontier.ipynb): Given a stock portfolio, find the optimal weights using a Monte Carlo Simulation.
 ## Online Dashboard Hosted on Heroku
