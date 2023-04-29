@@ -1,7 +1,7 @@
 import yfinance as yf
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib as plt
 from finance_gs import *
 from datetime import datetime
 
@@ -9,6 +9,8 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.express as px
+import plotly.graph_objs as go
+
 
 # Set the colors for the app
 colors = {
@@ -77,6 +79,8 @@ app.layout = html.Div([
     
     html.Div(id='output', style={'padding': '20px'}),
     
+    dcc.Graph(id='scatter-plot'),
+    
     html.Div(id='charts', style={'padding': '20px'}),
     
 ], style={'background': colors['background'], 'fontFamily': 'Lato'})
@@ -86,6 +90,7 @@ app.layout = html.Div([
 @app.callback(
     dash.dependencies.Output('dropdown', 'options'),
     dash.dependencies.Output('dropdown', 'value'),
+     dash.dependencies.Output('input', 'value'),
     dash.dependencies.Input('add-button', 'n_clicks'),
     dash.dependencies.State('input', 'value'),
     dash.dependencies.State('dropdown', 'options'),
@@ -95,11 +100,12 @@ def update_dropdown_options(n_clicks, value, options, selected):
     if n_clicks > 0 and value:
         options.append({'label': value, 'value': value})
         selected.append(value)
-    return options, selected
+    return options, selected, ''
 
 @app.callback(
     dash.dependencies.Output('output', 'children'),
     dash.dependencies.Output('charts', 'children'),
+    dash.dependencies.Output('scatter-plot', 'figure'),
     dash.dependencies.Input('print-button', 'n_clicks'),
     dash.dependencies.State('dropdown', 'value'),
     dash.dependencies.Input('date-range', 'start_date'),
@@ -110,7 +116,7 @@ def print_selected_values(n_clicks, value, start, end):
     
     if n_clicks > 0 and len(value) == 0:
         
-        return html.Div(), charts
+        return html.Div(), charts, go.Figure()
     
     elif len(value) > 0 and start is not None and end is not None and n_clicks > 0:
         
@@ -152,7 +158,31 @@ def print_selected_values(n_clicks, value, start, end):
         sharpe_ratios = rets / stds
         max_sharpe_ratio_index = np.argmax(sharpe_ratios)
         optimal_weights = all_weights[max_sharpe_ratio_index,:]
-
+        
+        fig_ptf = go.Figure(
+                        go.Scatter(
+                            x=stds,
+                            y=rets,
+                            mode='markers',
+                            marker=dict(
+                                size=8,
+                                color=rets/stds,
+                                
+                                symbol='circle'
+                            ),
+                            hovertemplate='Standard Deviation: %{x}<br>Return: %{y}<br>Sharpe Ratio: %{marker.color:.2f}<extra></extra>'
+                        )
+                    ).update_layout(
+                        xaxis_title='Standard Deviation',
+                        yaxis_title='Return',
+                        coloraxis=dict(
+                            colorbar=dict(
+                                title='Sharpe Ratio'
+                            )
+                        ),
+                        height=500,
+                        margin=dict(l=50, r=50, b=50, t=50),
+                    )
         
         
         for each in value:
@@ -163,10 +193,10 @@ def print_selected_values(n_clicks, value, start, end):
         return html.Div([
             html.H3('Selected values:'),
             html.Ul([html.Li(val) for val in optimal_weights])
-        ]), charts 
+        ]), charts , fig_ptf
     
     else:
-        return html.Div(), charts
+        return html.Div(), charts, go.Figure()
 
 if __name__ == '__main__':
     app.run_server(debug=True)
