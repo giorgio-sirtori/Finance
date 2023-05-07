@@ -82,6 +82,8 @@ app.layout = html.Div([
     dcc.Graph(id='scatter-plot'),
     
     html.Div(id='charts', style={'padding': '20px'}),
+
+    html.Div(id='corr-chart', style={'padding': '20px'})
     
 ], style={'background': colors['background'], 'fontFamily': 'Lato'})
 
@@ -106,6 +108,7 @@ def update_dropdown_options(n_clicks, value, options, selected):
     dash.dependencies.Output('output', 'children'),
     dash.dependencies.Output('charts', 'children'),
     dash.dependencies.Output('scatter-plot', 'figure'),
+    dash.dependencies.Output('corr-chart', 'children'),
     dash.dependencies.Input('print-button', 'n_clicks'),
     dash.dependencies.State('dropdown', 'value'),
     dash.dependencies.Input('date-range', 'start_date'),
@@ -113,10 +116,13 @@ def update_dropdown_options(n_clicks, value, options, selected):
 )
 def print_selected_values(n_clicks, value, start, end):
     charts = []
-    
+    chart_corr = []    
+
+    tickers = value
+
     if n_clicks > 0 and len(value) == 0:
         
-        return html.Div(), charts, go.Figure()
+        return html.Div(), charts, go.Figure(), html.Div()
     
     elif len(value) > 0 and start is not None and end is not None and n_clicks > 0:
         
@@ -169,10 +175,11 @@ def print_selected_values(n_clicks, value, start, end):
                                 color=rets/stds,
                                 
                                 symbol='circle'
-                            ),
+                                        ),
                             hovertemplate='Standard Deviation: %{x}<br>Return: %{y}<br>Sharpe Ratio: %{marker.color:.2f}<extra></extra>'
-                        )
-                    ).update_layout(
+                                  )
+                            )
+        fig_ptf.update_layout(
                         xaxis_title='Standard Deviation',
                         yaxis_title='Return',
                         coloraxis=dict(
@@ -184,19 +191,31 @@ def print_selected_values(n_clicks, value, start, end):
                         margin=dict(l=50, r=50, b=50, t=50),
                     )
         
+        #include the correlation matrix of the PTF
+        #histogram of the returns for each pair
+
+        corr_matrix = daily_returns.corr()
+
+        fig_corr = go.Figure(data=go.Heatmap(z=corr_matrix.values,x=corr_matrix.columns,y=corr_matrix.columns,colorscale='RdBu',zmin=-1,zmax=1,hoverongaps=False))
+        fig_corr.update_layout(title='Correlation Matrix of Stock Returns')
         
+        chart_corr.append(dcc.Graph(figure=fig_corr))
+
         for each in value:
             df = getTickerData(each, start, end)
-            fig = px.histogram(df, x = df['Daily Return'])
+            fig = px.histogram(df, x = df['Daily Return'],  opacity=0.8, color_discrete_sequence=['#636EFA'])
+            fig.update_layout(title='Distribution of '+ each +' Stock Returns', xaxis_title='Return', yaxis_title='Count')
             charts.append(dcc.Graph(figure=fig))
             
         return html.Div([
-            html.H3('Selected values:'),
-            html.Ul([html.Li(val) for val in optimal_weights])
-        ]), charts , fig_ptf
+            html.H3('Optimal Portfolio Weights:'),
+            html.Ul(
+                    [html.Li(val_e + ': ' + str(val)) for val,val_e in zip(list(optimal_weights), list(tickers))]
+                    )
+        ]), charts , fig_ptf, chart_corr
     
     else:
-        return html.Div(), charts, go.Figure()
+        return html.Div(), charts, go.Figure(), html.Div()
 
 if __name__ == '__main__':
     app.run_server(debug=True)
