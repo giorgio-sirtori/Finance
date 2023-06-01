@@ -16,7 +16,8 @@ This project's aim is to create a collection of finance related code for persona
 ### 📈  [Basic Stock Chart and Analysis](#basic-stock-chart-and-analysis)
 ### 💯  [Finding an Efficient Portfolio](#finding-an-efficient-portfolio)
 ### 🧪  [Backtesting Stragey](#backtesting-strategy)
-### 🔮  [Online Dashboard Hosted on Heroku](#online-dashboard-hosted-on-heroku)
+### 🔮  [Price Prediction](#price-prediction)
+###     [Online Dashboard Hosted on Heroku](#online-dashboard-hosted-on-heroku)
 
 
 
@@ -28,6 +29,8 @@ This project's aim is to create a collection of finance related code for persona
 - [Basic Stock Charts and Analysis](https://github.com/giorgio-sirtori/Finance/blob/main/basic_stock_charts.ipynb): Some simple charts and a monte carlo simulation of a stock price.
 ## Finding an Efficient Portfolio
 - [Finding an Efficient Portfolio](https://github.com/giorgio-sirtori/Finance/blob/main/portfolio_efficient_frontier.ipynb): Given a stock portfolio, find the optimal weights using a Monte Carlo Simulation.
+## Price Prediction
+- [Price Prediction]: Different methodologies to predict a stock price, from ARIMA models to LSTM model and various others
 ## Backtesting-strategy
 - [TBD](): Work in progress.
 ## Online Dashboard Hosted on Heroku
