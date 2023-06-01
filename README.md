@@ -15,7 +15,7 @@ This project's aim is to create a collection of finance related code for persona
 ### 📊  [Finance Functions](#finance-functions)
 ### 📈  [Basic Stock Chart and Analysis](#basic-stock-chart-and-analysis)
 ### 💯  [Finding an Efficient Portfolio](#finding-an-efficient-portfolio)
-### 	[Backtesting Stragey](#backtesting-strategy
+### 🧪  [Backtesting Stragey](#backtesting-strategy)
 ### 🔮  [Online Dashboard Hosted on Heroku](#online-dashboard-hosted-on-heroku)
 
 
